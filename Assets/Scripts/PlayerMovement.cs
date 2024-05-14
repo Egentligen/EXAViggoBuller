@@ -2,35 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using TMPro;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 5f;
+    //Serialized variables
+    [SerializeField] float walkSpeed = 5f;
     [SerializeField] float sprintSpeed = 10f;
-    [SerializeField] float jumpForce = 5f;
-    [SerializeField] bool isJumping = false;
 
-    Rigidbody playerRigidbody;
+    [SerializeField] float jumpForce = 5f;
+
+    [Header("JetPack")]
+    [SerializeField] KeyCode jetPackKey = KeyCode.E;
+    [SerializeField] float jetpackForce = 10f;
+    [SerializeField] float maxFuel = 100f;
+    [SerializeField] float fuelConsumptionRate = 10f;
+    [SerializeField] float fuelRegainRate = 5f;
+    [SerializeField] Slider fuelBar;
+
+    [Header("GroundCheck")]
+    [SerializeField] Transform groundCheckTransform;
+    [SerializeField] float groundCheckRadius = 0.4f;
+    [SerializeField] LayerMask groundLayerMask;
+
+    //Private variables
+    float currentFuel;
+
+    //Cached references
+    Rigidbody rb;
     Transform camTransform;
 
     private void Awake()
     {
-        playerRigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         camTransform = Camera.main.transform;
+        currentFuel = maxFuel;
     }
 
     private void FixedUpdate()
     {
         Move();
         Jump();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isJumping = false;
-        }
+        Fly();
     }
 
     private void Move()
@@ -46,19 +60,43 @@ public class PlayerMovement : MonoBehaviour
 
         //Calculate movement direction based on input and camera orientation
         Vector3 moveDirection = (cameraForward * moveVertical + cameraRight * moveHorizontal).normalized;
+        float moveSpeed = Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed;
 
-        playerRigidbody.velocity = new Vector3(moveDirection.x * moveSpeed, playerRigidbody.velocity.y, moveDirection.z * moveSpeed);
-
-        //Sprint
-        float speed = Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : moveSpeed;
+        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
     }
 
     private void Jump() 
     {
-        if (Input.GetKey(KeyCode.Space) && !isJumping)
+        if (Input.GetKey(KeyCode.Space) && IsGrounded())
         {
-            playerRigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-            isJumping = true;
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics.CheckSphere(groundCheckTransform.position, groundCheckRadius, groundLayerMask);
+    }
+
+
+    private void Fly()
+    {
+        fuelBar.value = Mathf.Lerp(fuelBar.value, currentFuel / maxFuel, Time.deltaTime * 5f);
+
+        if (Input.GetKey(jetPackKey) && currentFuel > 0f)
+        {
+            rb.AddForce(Vector3.up * jetpackForce, ForceMode.Force);
+            currentFuel -= fuelConsumptionRate * Time.deltaTime;
+            currentFuel = Mathf.Clamp(currentFuel, 0f, maxFuel);
+        }
+        else if (currentFuel < maxFuel)
+        {
+            currentFuel += fuelRegainRate * Time.deltaTime;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(groundCheckTransform.position, groundCheckRadius);
     }
 }
