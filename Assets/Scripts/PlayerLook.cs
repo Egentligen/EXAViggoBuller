@@ -18,8 +18,8 @@ public class PlayerLook : MonoBehaviour
 
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * Time.deltaTime * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * Time.deltaTime * mouseSensitivity;
 
         yRotation -= mouseY;
         yRotation = Mathf.Clamp(yRotation, -minViewDistance, minViewDistance);

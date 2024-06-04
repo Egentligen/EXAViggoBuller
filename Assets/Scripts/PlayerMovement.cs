@@ -7,12 +7,10 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    //Serialized variables
+    [Header("Move")]
     [SerializeField] float walkSpeed = 5f;
     [SerializeField] float sprintSpeed = 10f;
-
     [SerializeField] float jumpForce = 5f;
-
     [Header("JetPack")]
     [SerializeField] KeyCode jetPackKey = KeyCode.E;
     [SerializeField] float jetpackForce = 10f;
@@ -20,27 +18,42 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float fuelConsumptionRate = 10f;
     [SerializeField] float fuelRegainRate = 5f;
     [SerializeField] Slider fuelBar;
-
+    [SerializeField] TextMeshProUGUI instruction;
     [Header("GroundCheck")]
     [SerializeField] Transform groundCheckTransform;
     [SerializeField] float groundCheckRadius = 0.4f;
     [SerializeField] LayerMask groundLayerMask;
 
-    //Private variables
     float currentFuel;
+    Vector3 spawnPos;
 
-    //Cached references
     Rigidbody rb;
     Transform camTransform;
+    Melee melee;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        camTransform = Camera.main.transform;
-        currentFuel = maxFuel;
+        melee = FindObjectOfType<Melee>();
     }
 
-    private void FixedUpdate()
+    private void Start()
+    {
+        camTransform = Camera.main.transform;
+        currentFuel = maxFuel;
+        spawnPos = transform.position;
+        instruction.text = "Press " + jetPackKey + " to use jetpack";
+    }
+
+    private void Update()
+    {
+        if (transform.position.y < -5f) 
+        {
+            transform.position = spawnPos;
+        }
+    }
+
+    private void FixedUpdate() 
     {
         Move();
         Jump();
@@ -63,6 +76,11 @@ public class PlayerMovement : MonoBehaviour
         float moveSpeed = Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed;
 
         rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
+
+        if (melee.IsSwinging()) 
+        {
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        }
     }
 
     private void Jump() 
