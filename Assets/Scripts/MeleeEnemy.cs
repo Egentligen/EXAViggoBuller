@@ -95,8 +95,8 @@ public class MeleeEnemy : MonoBehaviour
 
         if (timeSinceHit > attackTime)
         {
-            playerHealth.TakeDamage(damage); Debug.Log("Damagfe");
             timeSinceHit = 0;
+            playerHealth.TakeDamage(damage);
         }
     }
 

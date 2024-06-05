@@ -13,12 +13,17 @@ public abstract class Gun : MonoBehaviour
     [Header("Effects")]
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
+    public AudioClip fireSound;
 
     protected float nextTimeToFire = 0f;
     protected Camera mainCam;
 
+    Sounds sounds;
+
     protected virtual void Awake()
     {
+        sounds = FindObjectOfType<Sounds>();
+
         mainCam = Camera.main;
     }
 
@@ -28,6 +33,8 @@ public abstract class Gun : MonoBehaviour
         {
             nextTimeToFire = Time.time + 1f / fireRate;
             Fire();
+
+            sounds.PlaySound(fireSound, transform.position);
         }
     }
 

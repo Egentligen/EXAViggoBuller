@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class SMG : Gun
 {
-    [SerializeField] string weaponName;
-
     protected override void Fire()
     {
         muzzleFlash.Play();

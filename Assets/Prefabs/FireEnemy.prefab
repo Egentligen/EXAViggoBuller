@@ -128,13 +128,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 6410786038499848623, guid: 6b3845b6e1490914b9fffbae00f26188, type: 3}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 2778628231041933004, guid: 567fd4d1b6eb46044a68dbe75ff597d0, type: 3}
   moveSpeed: 1
   changeDirectionTime: 5
   movementRadius: 2
-  viewRange: 25
+  viewRange: 26.6
   attackTime: 0.5
-  attackRange: 0
+  attackRange: 25.2
   projectileSpeed: 20
   damage: 10
 --- !u!65 &4034992625419385538

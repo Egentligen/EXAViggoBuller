@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponSelect : MonoBehaviour
 {
     [SerializeField] GameObject[] weapons;
+    [SerializeField] Image[] weaponImages;
     
     int currentWeaponIndex = 0; 
 
@@ -12,12 +14,19 @@ public class WeaponSelect : MonoBehaviour
         foreach (GameObject weapon in weapons)
         {
             weapon.SetActive(false);
+            
+        }
+
+        foreach (Image weaponImages in weaponImages)
+        {
+            weaponImages.color = Color.black;
         }
 
         //Activate the first weapon
         if (weapons.Length > 0)
         {
             weapons[0].SetActive(true);
+            weaponImages[0].color = Color.green;
         }
     }
 
@@ -28,7 +37,7 @@ public class WeaponSelect : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
             {
-                SwitchWeapon(i); // Switch to the corresponding weapon
+                SwitchWeapon(i); //Switch to the corresponding weapon
             }
         }
     }
@@ -39,10 +48,12 @@ public class WeaponSelect : MonoBehaviour
         {
             //Deactivate the current weapon
             weapons[currentWeaponIndex].SetActive(false);
+            weaponImages[currentWeaponIndex ].color = Color.black;
 
             //Activate the new weapon
             currentWeaponIndex = weaponIndex;
             weapons[currentWeaponIndex].SetActive(true);
+            weaponImages[currentWeaponIndex].color = Color.green;
         }
     }
 }

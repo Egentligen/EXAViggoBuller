@@ -6,14 +6,16 @@ public class PlayerLook : MonoBehaviour
 {
     [SerializeField] Transform playerTransform;
     [SerializeField] float minViewDistance = 90f;
-    [SerializeField] float mouseSensitivity = 100f;
-
+    
+    float mouseSensitivity = 100;
     float yRotation;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        mouseSensitivity = SettingsManager.mouseSense;
     }
 
     void Update()
@@ -26,5 +28,19 @@ public class PlayerLook : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(yRotation, 0f, 0f);
         playerTransform.Rotate(Vector3.up * mouseX);
+    }
+
+    public void EnableMouse(bool doEnable) 
+    {
+        if (doEnable) 
+        { 
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else 
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 }

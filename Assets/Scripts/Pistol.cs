@@ -3,8 +3,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Pistol : Gun
 {
-    [SerializeField] string weaponName;
-
     protected override void Fire()
     {
         muzzleFlash.Play();

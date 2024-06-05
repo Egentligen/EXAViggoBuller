@@ -12,21 +12,17 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject, lifeTime);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collider)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Player"))
         {
             // Assume the player has a method to take damage
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+            PlayerHealth playerHealth = collider.gameObject.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damage);
             }
 
-            Destroy(gameObject);
-        }
-        else if (collision.gameObject.CompareTag("Environment"))
-        {
             Destroy(gameObject);
         }
     }

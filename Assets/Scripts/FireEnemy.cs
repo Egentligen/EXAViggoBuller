@@ -16,7 +16,6 @@ public class FireEnemy : MonoBehaviour
     [SerializeField] float attackTime = 0.5f;
     [SerializeField] float attackRange = 10f;
     [SerializeField] float projectileSpeed = 15f;
-    [SerializeField] int damage = 10;
 
     Vector3 movementDirection;
     float timeSinceLastChange;

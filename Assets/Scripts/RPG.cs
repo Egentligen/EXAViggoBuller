@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RPG : Gun
 {
-    [SerializeField] string weaponName;
     [SerializeField] GameObject rocket;
     [SerializeField] float speed;
 

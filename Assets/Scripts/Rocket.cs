@@ -35,18 +35,11 @@ public class Rocket : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider nearbyObject in colliders)
         {
-            // Apply damage to enemies
+            //Apply damage to enemies
             EnemyHealth enemy = nearbyObject.GetComponent<EnemyHealth>();
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
-            }
-
-            // Apply explosion force
-            Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
             }
         }
 

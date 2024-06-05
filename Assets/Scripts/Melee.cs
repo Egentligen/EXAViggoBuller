@@ -13,6 +13,7 @@ public class Melee : MonoBehaviour
     [Header("Combo")]
     [SerializeField] Vector3[] swingAngles;
     [SerializeField] int[] swingDamage = { 10, 20, 30 };
+    [SerializeField] AudioClip[] swingSounds;
     [SerializeField] float comboTime = 1.0f; //Time window to perform the next combo
     [Header("Swing")]
     [SerializeField] float attackCooldown = 0.5f;
@@ -24,6 +25,13 @@ public class Melee : MonoBehaviour
     float lastSwingTime = 0;
     bool isSwinging = false;
     bool showHitbox = false;
+
+    Sounds sounds;
+
+    private void Awake()
+    {
+        sounds = FindObjectOfType<Sounds>();
+    }
 
     private void Update()
     {
@@ -61,6 +69,8 @@ public class Melee : MonoBehaviour
 
             SwingSword(swingAngles[currentCombo], swingDamage[currentCombo]);
             lastSwingTime = Time.time;
+
+            sounds.PlaySound(swingSounds[currentCombo], transform.position);
 
             currentCombo = (currentCombo + 1) % swingAngles.Length; //Execute the current combo swing
         }

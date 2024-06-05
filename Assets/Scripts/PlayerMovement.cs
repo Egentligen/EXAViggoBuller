@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] GameObject pauseCanvas;
     [Header("Move")]
     [SerializeField] float walkSpeed = 5f;
     [SerializeField] float sprintSpeed = 10f;
@@ -30,11 +31,15 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     Transform camTransform;
     Melee melee;
+    PlayerLook look;
+    SceneLoading sceneLoading;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         melee = FindObjectOfType<Melee>();
+        look = FindObjectOfType<PlayerLook>();
+        sceneLoading = FindObjectOfType<SceneLoading>();
     }
 
     private void Start()
@@ -43,13 +48,16 @@ public class PlayerMovement : MonoBehaviour
         currentFuel = maxFuel;
         spawnPos = transform.position;
         instruction.text = "Press " + jetPackKey + " to use jetpack";
+
+        Pause(false);
+        pauseCanvas.SetActive(false);
     }
 
     private void Update()
     {
-        if (transform.position.y < -5f) 
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            transform.position = spawnPos;
+            Pause(true);
         }
     }
 
@@ -58,6 +66,31 @@ public class PlayerMovement : MonoBehaviour
         Move();
         Jump();
         Fly();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Win")) 
+        {
+            look.EnableMouse(true);
+            sceneLoading.ChangeScene(2);
+        }
+    }
+
+    public void Pause(bool doPause)
+    {
+        if (doPause) 
+        {
+            Time.timeScale = 0f;
+            pauseCanvas.SetActive(true);
+            look.EnableMouse(true);
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            pauseCanvas.SetActive(false);
+            look.EnableMouse(false);
+        }
     }
 
     private void Move()
